@@ -25,7 +25,7 @@ const tabItems = [
   {
     title:'找房',
     icon:'icon-findHouse',
-    path:'/home/houselist'
+    path:'/home/list'
   },
   {
     title:'资讯',
@@ -42,6 +42,18 @@ const tabItems = [
 export default class Home extends React.Component{
   state = {
     selectedTab: this.props.location.pathname, // TabBar默认选中的菜单项
+  }
+
+  // 会在更新后会被立即调用 生命周期函数
+  componentDidUpdate(prevProps) {
+    /* console.log('上一次的路由信息:',prevProps)
+    console.log('当前的路由信息:',this.props) */
+    if(prevProps.location.pathname !== this.props.location.pathname){
+      // 此时路由发生切换
+      this.setState({
+        selectedTab: this.props.location.pathname
+      })
+    }
   }
 
   // 渲染 TabBar.item
@@ -75,7 +87,7 @@ export default class Home extends React.Component{
         {/* 渲染子路由 */}
         <Route path='/home/news' component={News}></Route>
         <Route path='/home' exact component={Index}></Route>
-        <Route path='/home/houselist' component={HouseList}></Route>
+        <Route path='/home/list' component={HouseList}></Route>
         <Route path='/home/profile' component={Profile}></Route>
         {/* TabBar */}
         <TabBar
