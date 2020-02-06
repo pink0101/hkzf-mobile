@@ -1,13 +1,22 @@
 html,body{
-  height: 100%;
   font-family: Microsoft YaHei;
   color:#333;
   background: #fff;
+  margin: 0;
+  padding: 0;
 }
 *{
   box-sizing: border-box; /*  内减模式 */
   touch-action: none
 }
 h2,p {
+  margin: 0;
+}
+
+html, body, #root, .App {
+  height: 100%;
+}
+ul{
+  list-style: none;
   margin: 0;
 }

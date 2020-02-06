@@ -11,6 +11,9 @@ import Nav4 from '../../assets/images/nav-4.png'
 // 导入样式文件
 import './index.scss'
 
+// 导入 utils 中获取定位城市的方法
+import { getCurrentCity } from '../../utils/index'
+
 // 导航菜单数据
 const navs = [
   {
@@ -39,11 +42,6 @@ const navs = [
   }
 ]
 
-// 获取地理位置信息
-navigator.geolocation.getCurrentPosition(position => {
-  console.log('当前位置信息',position)
-})
-
 /* 
   轮播图存在的两个问题
   1.不会自动播放
@@ -61,7 +59,8 @@ export default class Index extends React.Component{
     swipers: [], // 轮播图状态数据
     isSwiperLoaded:false,
     groups:[], // 租房小组数据
-    news:[] // 最新资讯数据
+    news:[], // 最新资讯数据
+    curCityName:'上海'// 当前城市名称
   }
   // 获取轮播图数据的方法
   async getSwiper() {
@@ -93,10 +92,25 @@ export default class Index extends React.Component{
   }
 
   //  会在组件挂载后（插入 DOM 树中）立即调用
-  componentDidMount() {
+  async componentDidMount() {
    this.getSwiper()
    this.getGroups()
    this.getNews()
+
+   // 通过 ip 定位获取到当前城市名称 (百度地图)
+   /* const curCity = new window.BMap.LocalCity()
+   curCity.get(async res => {
+     console.log('当前城市名称',res.name)
+     const result =await axios.get(`http://localhost:8080/area/info?name=${res.name}`)
+    //  console.log(result)
+    this.setState({
+      curCityName:result.data.body.label
+    })
+   }) */
+   const curCity = await getCurrentCity()
+   this.setState({
+     curCityName:curCity.label
+   })
   }
 
   // 轮播图渲染方法
@@ -167,7 +181,7 @@ export default class Index extends React.Component{
                 className="location"
                 onClick={() => this.props.history.push('/citylist')}
               >
-                <span className="name">上海</span>
+              <span className="name">{this.state.curCityName}</span>
                 <i className="iconfont icon-arrow" />
               </div>
 
