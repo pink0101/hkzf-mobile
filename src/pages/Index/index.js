@@ -181,8 +181,8 @@ export default class Index extends React.Component{
                 className="location"
                 onClick={() => this.props.history.push('/citylist')}
               >
-              <span className="name">{this.state.curCityName}</span>
-                <i className="iconfont icon-arrow" />
+                <span className="name">{this.state.curCityName}</span>
+                <i className="iconfont icon-arrow"/>
               </div>
 
               {/* 搜索表单 */}

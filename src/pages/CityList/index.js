@@ -1,5 +1,5 @@
 import React from 'react'
-import { NavBar } from 'antd-mobile'
+import { NavBar, Toast } from 'antd-mobile'
 import './index.scss'
 // 导入 axios
 import axios from 'axios'
@@ -13,6 +13,8 @@ import {List,AutoSizer} from 'react-virtualized'
 const TITLE_HEIGHT = 36
 // 每个城市名称的高度
 const NAME_HEIGHT = 50
+// 有房源的城市
+const HOUSE_CITY = ['北京','上海','广州','深圳']
 
 /*
 // 接口返回的数据格式：
@@ -113,6 +115,23 @@ export default class Home extends React.Component{
     })
   }
 
+  // 点击城市切换
+  /* 
+  1.给城市列表项绑定点击事件
+  2.判断当前城市是否有房源数据（只有北/上/广/深四个城市数据）
+  3.如果有房源数据，则保存当前城市数据到本地缓存中，并返回上一页
+  4.如果没有房源数据，则提示用户：该城市占无房源数据
+  */
+
+  changeCity({label, value}) {
+    if(HOUSE_CITY.indexOf(label) > -1){
+      localStorage.setItem('hkzf_city',JSON.stringify({ label, value }))
+      this.props.history.go(-1)
+    }else{
+      Toast.info('该城市占无房源信息', 1,null,false)
+    }
+  }
+
   // 渲染每一行数据的渲染函数
 // 函数的返回值就表示最终渲染在页面中的内容
 rowRenderer = ({
@@ -129,7 +148,9 @@ rowRenderer = ({
       <div className='title'>{formatCityIndex(letter)}</div>
       {
         cityList[letter].map(item => (
-          <div className='name' key={item.value}>{item.label}</div>
+          <div className='name' key={item.value} onClick={() => {this.changeCity(item)}}>
+            {item.label}
+          </div>
         ))
       }
     </div>
