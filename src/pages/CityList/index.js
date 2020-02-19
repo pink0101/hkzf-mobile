@@ -1,5 +1,5 @@
 import React from 'react'
-import { NavBar, Toast } from 'antd-mobile'
+import { Toast } from 'antd-mobile'
 import './index.scss'
 // 导入 axios
 import axios from 'axios'
@@ -8,6 +8,9 @@ import { getCurrentCity } from '../../utils/index'
 
 // 导入 List 组件
 import {List,AutoSizer} from 'react-virtualized'
+
+// 导入 封装好的 NavHeader 组件
+import NavHeader from '../../components/NavHeader/index'
 
 // 索引(A,B等) 的高度
 const TITLE_HEIGHT = 36
@@ -207,12 +210,10 @@ onRowsRendered = ({startIndex}) =>{
   render() {
     return (
       <div className='citylist'>
-        <NavBar
-          className='navbar'
-          mode="light"
-          icon={<i className='iconfont icon-back' />}
-          onLeftClick={() => this.props.history.go(-1)}
-        >城市选择</NavBar>
+        {/* 顶部导航栏组件 */}
+        <NavHeader>
+          城市列表
+        </NavHeader>
 
         {/* 城市列表 */}
         <AutoSizer>

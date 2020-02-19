@@ -77,7 +77,7 @@ export default class Home extends React.Component{
               this.props.history.push(item.path)
             }}
           >
-          </TabBar.Item>
+      </TabBar.Item>
       )
   }
 
