@@ -64,8 +64,8 @@ export default class Home extends React.Component{
   constructor(props){
     super(props)
     this.state = {
-      cityList:{},
-      cityIndex:[],
+      cityList:{}, // 城市列表数据
+      cityIndex:[], // 城市列表右侧索引数据
       activeIndex:0 // 指定右侧索引列表高亮的索引号
     }
 

@@ -118,7 +118,7 @@ export default class Index extends React.Component{
     return this.state.swipers.map(item => (
       <a
         key={item.id}
-        href=""
+        href="0"
         style={{ display: 'inline-block', width: '100%', height:212}}
       >
         <img
@@ -144,7 +144,7 @@ export default class Index extends React.Component{
     return this.state.news.map(item => (
       <div className='item-news' key={item.id}>
         <div className='imgwrap'>
-          <img src={`http://localhost:8080${item.imgSrc}`} />
+          <img src={`http://localhost:8080${item.imgSrc}`} alt=''/>
         </div>
         <Flex className='content' direction='column' justify='between'> 
           <h3 className='title'>{item.title}</h3>
