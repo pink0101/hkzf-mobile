@@ -11,7 +11,9 @@
    */
  import React from 'react'
  import { NavBar } from 'antd-mobile'
- import './index.scss'
+
+//  import './index.scss'
+import styles from './index.module.css'
 
  // 导入 withRouter 高阶组件
 import { withRouter } from 'react-router-dom'
@@ -25,7 +27,7 @@ function NavHeader({children, history, onLeftClick}) {
 
    return (
     <NavBar
-    className='navbar'
+    className={styles.navBar}
     mode="light"
     icon={<i className='iconfont icon-back' />}
     onLeftClick={ onLeftClick || defaultHandler }

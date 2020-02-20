@@ -1,9 +1,10 @@
 import React from 'react'
-// 导入样式
-import './index.scss'
 
 // 导入 封装好的 NavHeader 组件
 import NavHeader from '../../components/NavHeader/index'
+
+// 导入样式
+import styles from './index.module.css'
 
 export default class Map extends React.Component {
   // 生命周期函数 会在组件挂载后（插入 DOM 树中）立即调用。
@@ -37,14 +38,13 @@ export default class Map extends React.Component {
   */
 
   render() {
-    return <div className='map'>
+    return <div className={styles.map}>
       {/* 顶部导航栏组件 */}
       <NavHeader>
         地图找房
       </NavHeader>
       {/* 地图容器元素 */}
-      <div id='container'>
-      </div>
+      <div id='container' className={styles.container}/>
     </div>
   }
 }
