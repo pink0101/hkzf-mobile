@@ -3,11 +3,16 @@ import React from 'react'
 // 导入 封装好的 NavHeader 组件
 import NavHeader from '../../components/NavHeader/index'
 
+import { Toast } from 'antd-mobile'
+
 // 导入样式
 import styles from './index.module.css'
 
 // 导入 axios 
 import axios from 'axios'
+
+// 导入 路由
+import { Link } from 'react-router-dom'
 
 // 覆盖物样式
 const labelStyle = {
@@ -21,11 +26,18 @@ const labelStyle = {
 }
 
 export default class Map extends React.Component {
+
+  state = {
+    // 小区下的房源列表
+    housesList:[],
+    // 表示是否展示房源列表
+    isShowList: false
+  }
+
   // 生命周期函数 会在组件挂载后（插入 DOM 树中）立即调用。
   componentDidMount() {
     this.initMap()
   }
-
 
   // 初始化地图
   initMap() {
@@ -132,25 +144,42 @@ export default class Map extends React.Component {
     }, 
     label)
 
-    // 地图初始化，同时设置地图展示级别
-    // map.centerAndZoom(point, 17)
+    // 给地图绑定移动事件
+    map.addEventListener('movestart',() => {
+      if(this.state.isShowList){
+        this.setState({
+          isShowList:false
+        })
+      }
+    })
   }
 
   /* 渲染覆盖物入口 */
   // 1 接收区域 id 参数， 获取该区域下的房源数据
   // 2 获取房源类型以及下级地图的缩放级别
   async renderOverlays(id){
-    const res = await axios.get(`http://localhost:8080/area/map?id=${id}`)
-    // console.log(res)
-    const data = res.data.body
+    try{
+      // 开启loading效果
+      Toast.loading('加载中...',0,null,false)
 
-    // 调用 getTypeAndZoom 方法获取级别和类型
-    const { nextZoom,type } = this.getTypeAndZoom()
+      const res = await axios.get(`http://localhost:8080/area/map?id=${id}`)
+      // 关闭loading
+      Toast.hide()
 
-    data.forEach(item => {
-      // 创建覆盖物
-      this.createOverlays(item,nextZoom,type)
-    })
+      // console.log(res)
+      const data = res.data.body
+
+      // 调用 getTypeAndZoom 方法获取级别和类型
+      const { nextZoom,type } = this.getTypeAndZoom()
+
+      data.forEach(item => {
+        // 创建覆盖物
+        this.createOverlays(item,nextZoom,type)
+      })
+    }catch(e){
+      // 关闭loading
+      Toast.hide()
+    }
   }
 
   // 计算要绘制的覆盖物类型和下一个缩放级别
@@ -188,6 +217,7 @@ export default class Map extends React.Component {
       //小区
       this.createRect(areaPoint,areaName,count,value)
     }else{
+      // 参数 地图坐标 地域名称 房源数量 id值 地图缩放级别
       this.createCircle(areaPoint,areaName,count,value,zoom)
     }
   }
@@ -201,9 +231,6 @@ export default class Map extends React.Component {
 
     // 说明： 设置 setContent 后，第一个参数中设置的文本内容就失效了，因此，直接清空即可
     const label = new window.BMap.Label("", opts);  // 创建文本标注对象
-
-    // 给 label 对象添加一个唯一标识
-    label.id = value
 
     // 设置房源覆盖物内容
     label.setContent(`
@@ -235,7 +262,112 @@ export default class Map extends React.Component {
   }
 
   // 创建小区覆盖物
-  createRect(){}
+  createRect(areaPoint,areaName,count,value){
+    const opts = {
+      position : areaPoint,    // 指定文本标注所在的地理位置
+      offset   : new window.BMap.Size(-50, -28)    //设置文本偏移量
+    }
+
+    // 说明： 设置 setContent 后，第一个参数中设置的文本内容就失效了，因此，直接清空即可
+    const label = new window.BMap.Label("", opts);  // 创建文本标注对象
+
+    // 设置房源覆盖物内容
+    label.setContent(`
+    <div class="${styles.rect}">
+      <span class="${styles.housename}">${areaName}</span>
+      <span class="${styles.housenum}">${count}套</span>
+      <i class="${styles.arr}"></i>
+    </div>`)
+
+    // 设置样式
+    label.setStyle(labelStyle);
+
+    // 添加单击事件
+    label.addEventListener('click',(e) => {
+      /* 
+        1 创建 Label 、设置样式、设置 HTML 内容，绑定单击事件。
+        
+        2 在单击事件中，获取该小区的房源数据。
+        3 展示房源列表。
+        4 渲染获取到的房源数据。
+
+        5 调用地图 panBy() 方法，移动地图到中间位置。
+          公式：
+              垂直位移：(window.innerHeight - 330) / 2 - target.clientY
+              水平位移：window.innerWidth / 2 - target.clientX
+        6 监听地图 movestart 事件，在地图移动时隐藏房源列表。
+      */
+      this.getHousesList(value)
+
+      // 获取当前被点击项
+      const target = e.changedTouches[0]
+      this.map.panBy(window.innerWidth / 2 - target.clientX, (window.innerHeight - 330) / 2 - target.clientY)
+
+    })
+
+    // 添加覆盖物到地图中
+    this.map.addOverlay(label); 
+  }
+
+  // 获取小区房源数据
+  async getHousesList(id) {
+    try{
+      // 开启loading效果
+      Toast.loading('加载中...',0,null,false)
+      const res = await axios.get(`http://localhost:8080/houses?cityId=${id}`)
+      // 关闭loading
+      Toast.hide()
+      const data = res.data.body.list
+      console.log(data)
+      this.setState({
+        housesList:data,
+
+        // 展示房源列表
+        isShowList:true
+      })
+    }catch(e){
+      // 关闭loading
+      Toast.hide()
+    }
+  }
+
+
+  // 封装渲染房屋列表的方法
+  renderHousesList() {
+    return this.state.housesList.map(item => (
+      <div className={styles.house} key={item.houseCode}>
+        {/* 图片展示 */}
+        <div className={styles.imgWrap}>
+          <img
+            className={styles.img}
+            src={`http://localhost:8080${item.houseImg}`}
+            alt=""
+          />
+        </div>
+        {/* 文字部分 */}
+        <div className={styles.content}>
+          <h3 className={styles.title}>{item.title}</h3>
+          <div className={styles.desc}>{item.desc}</div>
+          <div>
+            {item.tags.map((tag,index) => {
+              const tagClass = 'tag' + (index + 1)
+              return (
+                <span
+                className={[styles.tag, styles[tagClass]].join(' ')}
+                key={tag}
+                >
+                {tag}
+                </span>
+              )
+              })}
+          </div>
+          <div className={styles.price}>
+            <span className={styles.priceNum}>{item.price}</span> 元/月
+          </div>
+        </div>
+      </div>
+    ))
+  }
 
   /* 
     1 封装 NavHeader 组件实现城市选择、地图找房页面的复用。
@@ -258,6 +390,31 @@ export default class Map extends React.Component {
       </NavHeader>
       {/* 地图容器元素 */}
       <div id='container' className={styles.container}/>
+      
+      {/* 房源列表 */}
+      {/* 添加 styles.show 展示房屋列表 */}
+      <div
+        className={[
+          styles.houseList,
+          this.state.isShowList ? styles.show : ''
+        ].join(' ')}
+      >
+        {/* 房源标题 */}
+        <div className={styles.titleWrap}>
+            <h1 className={styles.listTitle}>房屋列表</h1>
+            <Link className={styles.titleMore} to="/home/list">
+              更多房源
+            </Link>
+          </div>
+
+        {/* 房源展示 */}
+        <div className={styles.houseItems}>
+            {/* 房屋结构 */}
+            {
+              this.renderHousesList()
+            }
+        </div>
+      </div>
     </div>
   }
 }
