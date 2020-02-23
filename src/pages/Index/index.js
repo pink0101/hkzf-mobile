@@ -1,8 +1,9 @@
 import React from 'react'
 // 导入组件
 import { Carousel, Flex, Grid, WingBlank } from 'antd-mobile'
-// 导入 axios
-import axios from 'axios'
+// 导入 API
+import { API } from '../../utils/api'
+import { BASE_URL } from './../../utils/url'
 // 导入导航菜单图片
 import Nav1 from '../../assets/images/nav-1.png'
 import Nav2 from '../../assets/images/nav-2.png'
@@ -13,6 +14,7 @@ import './index.scss'
 
 // 导入 utils 中获取定位城市的方法
 import { getCurrentCity } from '../../utils/index'
+
 
 // 导航菜单数据
 const navs = [
@@ -64,7 +66,7 @@ export default class Index extends React.Component{
   }
   // 获取轮播图数据的方法
   async getSwiper() {
-    const res = await axios.get('http://localhost:8080/home/swiper')
+    const res = await API.get('/home/swiper')
     this.setState({
       swipers: res.data.body,
       isSwiperLoaded:true
@@ -73,7 +75,7 @@ export default class Index extends React.Component{
 
   // 获取租房小组数据的方法
   async getGroups() {
-    const res = await axios.get('http://localhost:8080/home/groups',{params:{
+    const res = await API.get('/home/groups',{params:{
       area: 'area=AREA%7C88cff55c-aaa4-e2e0'
     }})
     this.setState({
@@ -83,7 +85,7 @@ export default class Index extends React.Component{
 
   // 获取最新资讯数据
   async getNews() {
-    const res = await axios.get('http://localhost:8080/home/news',{params:{
+    const res = await API.get(`/home/news`,{params:{
       area: 'area=AREA%7C88cff55c-aaa4-e2e0'
     }})
     this.setState({
@@ -101,12 +103,13 @@ export default class Index extends React.Component{
    /* const curCity = new window.BMap.LocalCity()
    curCity.get(async res => {
      console.log('当前城市名称',res.name)
-     const result =await axios.get(`http://localhost:8080/area/info?name=${res.name}`)
+     const result =await axios.get(`http://47.94.219.128:8080/area/info?name=${res.name}`)
     //  console.log(result)
     this.setState({
       curCityName:result.data.body.label
     })
    }) */
+   // 封装后的
    const curCity = await getCurrentCity()
    this.setState({
      curCityName:curCity.label
@@ -122,7 +125,7 @@ export default class Index extends React.Component{
         style={{ display: 'inline-block', width: '100%', height:212}}
       >
         <img
-          src={`http://localhost:8080${item.imgSrc}`}
+          src={BASE_URL + item.imgSrc}
           alt=""
           style={{ width: '100%', verticalAlign: 'top' }}
         />
@@ -144,7 +147,7 @@ export default class Index extends React.Component{
     return this.state.news.map(item => (
       <div className='item-news' key={item.id}>
         <div className='imgwrap'>
-          <img src={`http://localhost:8080${item.imgSrc}`} alt=''/>
+          <img src={BASE_URL + item.imgSrc} alt=''/>
         </div>
         <Flex className='content' direction='column' justify='between'> 
           <h3 className='title'>{item.title}</h3>
@@ -223,7 +226,7 @@ export default class Index extends React.Component{
               <p className="title">{item.title}</p>
               <span className="info">{item.desc}</span>
             </div>
-            <img src={`http://localhost:8080${item.imgSrc}`} alt="" />
+            <img src={ BASE_URL + item.imgSrc} alt="" />
           </Flex>
           )} />
         </div>

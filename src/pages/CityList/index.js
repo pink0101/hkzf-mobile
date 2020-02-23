@@ -1,8 +1,10 @@
 import React from 'react'
 import { Toast } from 'antd-mobile'
 import './index.scss'
-// 导入 axios
-import axios from 'axios'
+
+// 导入 API
+import { API } from '../../utils/api'
+
 // 导入 utils 中获取当前定位城市的方法
 import { getCurrentCity } from '../../utils/index'
 
@@ -90,17 +92,17 @@ export default class Home extends React.Component{
 
   // 获取城市列表数据的方法
   async getCityList() {
-    const res = await axios.get('http://localhost:8080/area/city?level=1')
+    const res = await API.get(`/area/city?level=1`)
     console.log('城市列表数据',res)
     // 对请求到的数据进行处理并返回，解构
     const { cityList,cityIndex } = formatCityData(res.data.body)
     // console.log(cityList,cityIndex)
 
     // 获取热门城市数据
-    const hotRes = await axios.get('http://localhost:8080/area/hot')
+    const hotRes = await API.get(`/area/hot`)
     console.log('热门城市数据',hotRes)
     cityList['hot'] = hotRes.data.body
-    // 将索引添加到 cityIndex 中
+    // 将索引添加到 cityIndex 中f
     cityIndex.unshift('hot')
 
     // 获取当前定位城市

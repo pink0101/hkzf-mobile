@@ -8,8 +8,10 @@ import { Toast } from 'antd-mobile'
 // 导入样式
 import styles from './index.module.css'
 
-// 导入 axios 
-import axios from 'axios'
+// 导入 API
+import { API } from '../../utils/api'
+// 导入 BASE_URL
+import { BASE_URL } from '../../utils/url'
 
 // 导入 路由
 import { Link } from 'react-router-dom'
@@ -94,7 +96,7 @@ export default class Map extends React.Component {
             </div>
             */
 
-            /* const res = await axios.get(`http://localhost:8080/area/map?id=${value}`)
+            /* const res = await axios.get(`http://47.94.219.128:8080/area/map?id=${value}`)
             console.log(res.data.body)
             // 为每一条数据创建覆盖物
             res.data.body.forEach(item => {
@@ -162,7 +164,7 @@ export default class Map extends React.Component {
       // 开启loading效果
       Toast.loading('加载中...',0,null,false)
 
-      const res = await axios.get(`http://localhost:8080/area/map?id=${id}`)
+      const res = await API.get(`/area/map?id=${id}`)
       // 关闭loading
       Toast.hide()
 
@@ -314,7 +316,7 @@ export default class Map extends React.Component {
     try{
       // 开启loading效果
       Toast.loading('加载中...',0,null,false)
-      const res = await axios.get(`http://localhost:8080/houses?cityId=${id}`)
+      const res = await API.get(`/houses?cityId=${id}`)
       // 关闭loading
       Toast.hide()
       const data = res.data.body.list
@@ -340,7 +342,7 @@ export default class Map extends React.Component {
         <div className={styles.imgWrap}>
           <img
             className={styles.img}
-            src={`http://localhost:8080${item.houseImg}`}
+            src={BASE_URL + item.houseImg}
             alt=""
           />
         </div>

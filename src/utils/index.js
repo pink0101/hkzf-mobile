@@ -11,7 +11,7 @@
         const curCity = new window.BMap.LocalCity()
         curCity.get(async res => {
           try{
-            const result =await axios.get(`http://localhost:8080/area/info?name=${res.name}`)
+            const result =await axios.get(`http://47.94.219.128:8080/area/info?name=${res.name}`)
             //  console.log(result)
             // 存储到本地存储中
             localStorage.setItem('hkzf_city',JSON.stringify(result.data.body))

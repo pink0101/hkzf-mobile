@@ -7,7 +7,6 @@ html,body{
 }
 *{
   box-sizing: border-box; /*  内减模式 */
-  touch-action: none
 }
 h2,p {
   margin: 0;
