@@ -12,6 +12,9 @@ import Nav4 from '../../assets/images/nav-4.png'
 // 导入样式文件
 import './index.scss'
 
+// 导入搜索导航栏组件
+import SearchHeader from '../../components/SearchHeader'
+
 // 导入 utils 中获取定位城市的方法
 import { getCurrentCity } from '../../utils/index'
 
@@ -176,33 +179,7 @@ export default class Index extends React.Component{
         }
 
         {/* 搜索框 */}
-        <Flex className="search-box">
-            {/* 左侧白色区域 */}
-            <Flex className="search">
-              {/* 位置 */}
-              <div
-                className="location"
-                onClick={() => this.props.history.push('/citylist')}
-              >
-                <span className="name">{this.state.curCityName}</span>
-                <i className="iconfont icon-arrow"/>
-              </div>
-
-              {/* 搜索表单 */}
-              <div
-                className="form"
-                onClick={() => this.props.history.push('/search')}
-              >
-                <i className="iconfont icon-seach" />
-                <span className="text">请输入小区或地址</span>
-              </div>
-            </Flex>
-            {/* 右侧地图图标 */}
-            <i
-              className="iconfont icon-map"
-              onClick={() => this.props.history.push('/map')}
-            />
-          </Flex>
+        <SearchHeader cityName={this.state.curCityName}/>
         </div>
 
         {/* 导航菜单 */}
