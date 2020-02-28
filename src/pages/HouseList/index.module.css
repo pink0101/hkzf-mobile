@@ -11,6 +11,10 @@
   height:45px;
   padding:0 10px;
 }
+.houseItems{
+  padding: 0 15px;
+}
+
 /* 全局类名 */
 .header :global(.icon-back) {
   font-size: 16px;
@@ -21,4 +25,11 @@
 }
 .header :global(.search) {
   height: 30px;
+}
+
+.loading{
+  line-height: 120px;
+  text-align: center;
+  height: 110px;
+  background-color: #f6f5f6;
 }

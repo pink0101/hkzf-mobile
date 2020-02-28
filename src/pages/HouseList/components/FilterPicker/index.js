@@ -20,14 +20,14 @@ export default class FilterPicker extends Component {
           注意：一定要设置组件 value 属性的值，为当前选中状态的值，否则，无法实现切换选中项
         */}
         <PickerView data={data} value={value} cols={cols} onChange={val => {
-          console.log(val)
+          // console.log(val)
           this.setState({
             value:val
           })
         }}/>
 
         {/* 底部按钮 */}
-        <FilterFooter onCancel={() => onCancel()} onOk={() => onSave(value,type)}/>
+        <FilterFooter onCancel={() => onCancel(value,type)} onOk={() => onSave(value,type)}/>
       </>
     )
   }

@@ -16,6 +16,9 @@ import { BASE_URL } from '../../utils/url'
 // 导入 路由
 import { Link } from 'react-router-dom'
 
+// 导入封装好的房源列表
+import HouseItem from '../../components/HouseItem/index'
+
 // 覆盖物样式
 const labelStyle = {
   cursor: 'pointer',
@@ -333,41 +336,17 @@ export default class Map extends React.Component {
     }
   }
 
-
   // 封装渲染房屋列表的方法
   renderHousesList() {
     return this.state.housesList.map(item => (
-      <div className={styles.house} key={item.houseCode}>
-        {/* 图片展示 */}
-        <div className={styles.imgWrap}>
-          <img
-            className={styles.img}
-            src={BASE_URL + item.houseImg}
-            alt=""
-          />
-        </div>
-        {/* 文字部分 */}
-        <div className={styles.content}>
-          <h3 className={styles.title}>{item.title}</h3>
-          <div className={styles.desc}>{item.desc}</div>
-          <div>
-            {item.tags.map((tag,index) => {
-              const tagClass = 'tag' + (index + 1)
-              return (
-                <span
-                className={[styles.tag, styles[tagClass]].join(' ')}
-                key={tag}
-                >
-                {tag}
-                </span>
-              )
-              })}
-          </div>
-          <div className={styles.price}>
-            <span className={styles.priceNum}>{item.price}</span> 元/月
-          </div>
-        </div>
-      </div>
+      <HouseItem
+        key={item.houseCode}
+        src={BASE_URL + item.houseImg}
+        title={item.title}
+        desc={item.desc}
+        tags={item.tags}
+        price={item.price}
+      />
     ))
   }
 
