@@ -17,6 +17,8 @@ import styles from './index.module.css'
 import {List,AutoSizer,WindowScroller,InfiniteLoader} from 'react-virtualized'
 import HouseItem from '../../components/HouseItem/index'
 
+// 存储到本地存储中
+localStorage.setItem('hkzf_city',JSON.stringify({label: "上海", value: "AREA|dbf46d32-7e76-1196"}))
 // 获取当前定位城市信息
 const { label,value } = JSON.parse(localStorage.getItem('hkzf_city'))
 
@@ -55,7 +57,6 @@ export default class HouseList extends React.Component{
     })
   }
   
-
 
   // 接收 Filter 组件中的筛选条件数据
   onFilter = (filters) => {
@@ -109,7 +110,7 @@ export default class HouseList extends React.Component{
       // 数据加载完成时，调用 resolve 即可
       API.get(`/houses`,{
         params:{
-          cityId:value,
+          // cityId:value,
           ...this.filters,
           start:startIndex,
           end:stopIndex
@@ -132,7 +133,7 @@ export default class HouseList extends React.Component{
         {/* 顶部搜索栏 */}
         <Flex className={styles.header}>
           <i className='iconfont icon-back' onClick = {() => this.props.history.go(-1)}></i>
-          <SearchHeader cityName={label} className={styles.searchHeader}/>
+          {<SearchHeader cityName={label} className={styles.searchHeader}/>}
         </Flex>
         {/* 条件筛选栏 */}
         <Filter onFilter={this.onFilter} />
@@ -170,5 +171,5 @@ export default class HouseList extends React.Component{
         </div>
       </div>
     )
-  }1
+  }
 }

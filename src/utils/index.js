@@ -15,6 +15,7 @@
             //  console.log(result)
             // 存储到本地存储中
             localStorage.setItem('hkzf_city',JSON.stringify(result.data.body))
+            // console.log(result.data.body)
             // 获取城市定位成功了
             resolve(result.data.body)
           }catch(e){ // 失败了调用

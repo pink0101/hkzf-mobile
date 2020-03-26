@@ -48,6 +48,7 @@ export default class Home extends React.Component{
 
   // 会在更新后会被立即调用 生命周期函数
   componentDidUpdate(prevProps) {
+    
     /* console.log('上一次的路由信息:',prevProps)
     console.log('当前的路由信息:',this.props) */
     if(prevProps.location.pathname !== this.props.location.pathname){
